@@ -5,10 +5,10 @@ FORBIDDEN="socat nc netcat php lua telnet ncat cryptcat rlwrap msfconsole hydra 
 
 PORT=${PORT:-8080}
 
-keep_alive_local() {
+keep_alive() {
     while true; do
         sleep 30
-        curl -s --max-time 10 "https://$KOYEB_PUBLIC_DOMAIN" >/dev/null
+        curl -s --max-time 10 "https://$RENDER_EXTERNAL_HOSTNAME" >/dev/null || true
     done
 }
 
@@ -22,11 +22,11 @@ monitor_forbidden() {
 }
 
 start_heroku() {
-    python3 -m hikka --port "$PORT" &
+    python3 -m heroku --port "$PORT" &
 }
 
 start_heroku
-keep_alive_local &
+keep_alive &
 monitor_forbidden &
 
 tail -f /dev/null
